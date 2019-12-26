@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to My Flip Card Games App"/>
+    <HelloWorld msg="Welcome to My Flip Card Games By Chayut"/>
   </div>
 </template>
 
