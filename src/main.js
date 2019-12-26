@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-// import 'bulma'
+// Import the rest of Bulma
+import 'bulma'
 
 Vue.config.productionTip = false
 
