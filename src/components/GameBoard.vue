@@ -9,5 +9,8 @@ export default {
 </script>
 
 <style>
-
+.board {
+  min-height: 100vh;
+  background-color: #F4F4F4;
+}
 </style>
