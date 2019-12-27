@@ -1,9 +1,9 @@
 <template>
-  <div class="memory-card has-text-centered" :class="{'flip': fliped}">
-    <div class="front-face bra-3">
-      <h1>{{label}}</h1>
+  <div class="memory-card has-text-centered bra-4" :class="{'flip': fliped}">
+    <div class="front-face bra-4">
+      <h1>{{frontFaceLabel}}</h1>
     </div>
-    <div class="back-face bra-3">{{'π'}}</div>
+    <div class="back-face bra-4">{{backFaceLabel}}</div>
   </div>
 </template>
 
@@ -20,9 +20,13 @@ export default {
         return isUuid(id);
       }
     },
-    label: {
+    frontFaceLabel: {
       type: String,
       required: true
+    },
+    backFaceLabel: {
+      type: String,
+      default: 'π'
     },
     value: {
       type: Number,

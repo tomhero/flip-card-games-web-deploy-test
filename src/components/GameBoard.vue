@@ -19,7 +19,7 @@
           @mouseleave="onLeaveCard(cardIndex)"
           @click="flipCard(cardIndex)"
         >
-          <card :id="card._id" :value="card.value" :label="card.label" :fliped="card.isFliped"></card>
+          <card :id="card._id" :value="card.value" :front-face-label="card.label" :back-face-label="''+card.value" :fliped="card.isFliped"></card>
         </div>
       </transition-group>
     </div>
@@ -44,14 +44,13 @@ export default {
           value: 0,
           label: "0",
           isFliped: false,
-          isHovered: false,
-          isMatched: false
+          isHovered: false
         }
       ],
       // Card State
       hasFlippedCard: false,
-      firstCard: undefined,
-      secondCard: undefined,
+      firstCard: null,
+      secondCard: null,
       // Board State
       lockBoard: false,
       shuffling: false,
@@ -66,10 +65,8 @@ export default {
         _id: uuid(),
         value: (index % this.cardAmount) + 1,
         label: "" + ((index % this.cardAmount) + 1),
-        isFliped: false,
-        isHovered: undefined,
-        isMatched: false,
-        disabled: false
+        isFliped: true,
+        isHovered: undefined
       };
     }
     this.shuffleCards(this.cards);
@@ -84,18 +81,23 @@ export default {
     },
     indexOfSecondCard() {
       return this.cards.findIndex(card => card._id === this.secondCard._id);
+    },
+    allCardHasBeenFliped () {
+      return this.cards.filter(card => !card.isFliped).length > 0 ? false : true
     }
   },
   methods: {
     newGame() {
+      this.isLoadingGame = true
       // shuffle card
       this.cards.forEach(card => this.$set(card, 'isFliped', false))
-      // const tiemout = this.currentTry > 0 ? 250 : 0
       setTimeout(() => {
         this.cards = [...this.shuffleCards(this.cards)];
       }, 250)
       // reset score
       this.currentTry = 0
+      this.$emit('player-has-change-score', this.currentTry)
+      this.isLoadingGame = false
     },
     shuffleCards(cards) {
       for (let i = cards.length - 1; i > 0; i--) {
@@ -130,6 +132,12 @@ export default {
         if (this.cards[index]._id === this.firstCard._id) return;
       }
 
+      if (!this.cards[index].isFliped) {
+        // increase click counter
+        this.currentTry++;
+        this.$emit('player-has-change-score', this.currentTry)
+      }
+
       this.$set(this.cards, index, { ...this.cards[index], isFliped: true });
 
       if (!this.hasFlippedCard) {
@@ -138,11 +146,6 @@ export default {
         return;
       }
       this.secondCard = this.cards[index];
-
-      if (!this.cards[index].isFliped) {
-        // increase click counter
-        this.currentTry++;
-      }
 
       this.isMatched ? this.resetFlipState() : this.unflipCards();
     },
@@ -165,6 +168,9 @@ export default {
     resetFlipState() {
       [this.hasFlippedCard, this.lockBoard] = [false, false];
       [this.firstCard, this.secondCard] = [null, null];
+      if (this.allCardHasBeenFliped) {
+        this.$emit('end-game', this.currentTry)
+      }
     }
   }
 };

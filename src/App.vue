@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <score-board></score-board>
-    <game-board></game-board>
+    <score-board :current-score="currentTry" :player-best-score="playerBest" :global-best-score="globalBest"></score-board>
+    <game-board @player-has-change-score="setScore" @end-game="endGame"></game-board>
   </div>
 </template>
 
@@ -10,11 +10,40 @@
 import ScoreBoard from './components/ScoreBoard'
 import GameBoard from './components/GameBoard'
 
+import { getGlobelHighestScore } from './service/gameScoreService'
+
 export default {
   name: 'app',
+  data() {
+    return {
+      currentTry: 0,
+      playerBest: 99,
+      globalBest: 0 
+    }
+  },
   components: {
     ScoreBoard,
     GameBoard
+  },
+  beforeMount () {
+    // TODO : async await 🆗 local Storage
+    const storedBestScore = localStorage.getItem('playerBestScore')
+    if (!isNaN(storedBestScore)) {
+      this.playerBest = +storedBestScore
+    }
+    this.globalBest = getGlobelHighestScore().globalHighscore
+  },
+  methods: {
+    setScore (clickAmount) {
+      this.currentTry = clickAmount
+    },
+    endGame (finalScore) {
+      if (finalScore < this.playerBest) {
+         localStorage.setItem('playerBestScore', finalScore)
+         this.playerBest = finalScore
+         // TODO : send new score to API
+      }
+    }
   }
 }
 </script>

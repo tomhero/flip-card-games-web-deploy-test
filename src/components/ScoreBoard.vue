@@ -28,7 +28,7 @@
                     <br />Try
                   </h3>
                   <div class="score-box bra-1 my-15">
-                    <label class="title">10</label>
+                    <label class="title">{{ currentScore }}</label>
                   </div>
                 </div>
                 <div class="column has-text-centered">
@@ -37,7 +37,7 @@
                     <br />Best
                   </h3>
                   <div class="score-box bra-1 my-15">
-                    <label class="title">10</label>
+                    <label class="title">{{ playerBestScore }}</label>
                   </div>
                 </div>
                 <div class="column has-text-centered">
@@ -46,7 +46,7 @@
                     <br />Best
                   </h3>
                   <div class="score-box bra-1 my-15">
-                    <label class="title">10</label>
+                    <label class="title">{{ globalBestScore }}</label>
                   </div>
                 </div>
               </div>
@@ -75,7 +75,7 @@
         </div>
         <div class="column has-text-centered" style="padding-top: 0rem;">
           <div class="small-score-box">
-            <label class="title">10</label>
+            <label class="title">{{ currentScore }}</label>
           </div>
         </div>
         <div class="column has-text-right">
@@ -83,7 +83,7 @@
         </div>
         <div class="column has-text-centered" style="padding-top: 0rem;">
           <div class="small-score-box">
-            <label class="title">10</label>
+            <label class="title">{{ playerBestScore }}</label>
           </div>
         </div>
         <div class="column has-text-right">
@@ -91,7 +91,7 @@
         </div>
         <div class="column has-text-centered" style="padding-top: 0rem;">
           <div class="small-score-box">
-            <label class="title">10</label>
+            <label class="title">{{ globalBestScore }}</label>
           </div>
         </div>
       </div>
@@ -100,7 +100,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+      currentScore: {
+        type: Number,
+        default: 0
+      },
+      playerBestScore: {
+        type: Number,
+        default: 0
+      },
+      globalBestScore: {
+        type: Number,
+        default: 0
+      }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
