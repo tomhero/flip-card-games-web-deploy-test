@@ -9,11 +9,7 @@
         </div>
       </div>
       <br />
-      <transition-group
-        name="shuffle"
-        tag="div"
-        class="columns is-gapless is-mobile is-multiline"
-      >
+      <transition-group name="shuffle" tag="div" class="columns is-gapless is-mobile is-multiline">
         <div
           v-for="(card, cardIndex) in cards"
           :key="card._id"
@@ -46,7 +42,7 @@ export default {
         {
           _id: empty(),
           value: 0,
-          label: '0',
+          label: "0",
           isFliped: false,
           isHovered: false,
           isMatched: false
@@ -59,7 +55,8 @@ export default {
       // Board State
       lockBoard: false,
       shuffling: false,
-      currentTry: 0
+      currentTry: 0,
+      isLoadingGame: false
     };
   },
   beforeMount() {
@@ -67,23 +64,38 @@ export default {
     for (let index = 0; index < this.cardAmount * 2; index++) {
       this.cards[index] = {
         _id: uuid(),
-        value: index,
-        label: String(index + 1),
+        value: (index % this.cardAmount) + 1,
+        label: "" + ((index % this.cardAmount) + 1),
         isFliped: false,
         isHovered: undefined,
-        isMatched: false
+        isMatched: false,
+        disabled: false
       };
     }
     this.shuffleCards(this.cards);
   },
   computed: {
-    isMatched () {
+    isMatched() {
+      if (!this.firstCard || !this.secondCard) return false;
       return this.firstCard.value === this.secondCard.value;
+    },
+    indexOfFirstCard() {
+      return this.cards.findIndex(card => card._id === this.firstCard._id);
+    },
+    indexOfSecondCard() {
+      return this.cards.findIndex(card => card._id === this.secondCard._id);
     }
   },
   methods: {
     newGame() {
-      this.cards = [...this.shuffleCards(this.cards)];
+      // shuffle card
+      this.cards.forEach(card => this.$set(card, 'isFliped', false))
+      // const tiemout = this.currentTry > 0 ? 250 : 0
+      setTimeout(() => {
+        this.cards = [...this.shuffleCards(this.cards)];
+      }, 250)
+      // reset score
+      this.currentTry = 0
     },
     shuffleCards(cards) {
       for (let i = cards.length - 1; i > 0; i--) {
@@ -105,12 +117,15 @@ export default {
       this.$set(this.cards, index, { ...this.cards[index], isHovered: false });
       if (this.cards[index].isHovered !== undefined) {
         setTimeout(() => {
-          this.$set(this.cards, index, { ...this.cards[index], isHovered: undefined });
-        }, 250)
+          this.$set(this.cards, index, {
+            ...this.cards[index],
+            isHovered: undefined
+          });
+        }, 250);
       }
     },
     flipCard(index) {
-      if (this.lockBoard) return;
+      if (this.lockBoard || this.cards[index].isFliped) return;
       if (this.firstCard) {
         if (this.cards[index]._id === this.firstCard._id) return;
       }
@@ -123,24 +138,32 @@ export default {
         return;
       }
       this.secondCard = this.cards[index];
-      
-      this.isMatched ? this.disableCards() : this.unflipCards();
-    },
-    disableCards() {
-      this.resetFlipState();
+
+      if (!this.cards[index].isFliped) {
+        // increase click counter
+        this.currentTry++;
+      }
+
+      this.isMatched ? this.resetFlipState() : this.unflipCards();
     },
     unflipCards() {
       this.lockBoard = true;
       // Flip card logic
       setTimeout(() => {
+        // reset incorrect fliped card!!
+        this.$set(this.cards, this.indexOfFirstCard, {
+          ...this.firstCard,
+          isFliped: false
+        });
+        this.$set(this.cards, this.indexOfSecondCard, {
+          ...this.secondCard,
+          isFliped: false
+        });
         this.resetFlipState();
-      }, 1000)
+      }, 1000);
     },
     resetFlipState() {
       [this.hasFlippedCard, this.lockBoard] = [false, false];
-      // reset incorrect fliped card!!
-      // this.$set(this.firstCard, index, { ...this.cards[index], isFliped: true });
-      // this.$set(this.secondCard, index, { ...this.cards[index], isFliped: true });
       [this.firstCard, this.secondCard] = [null, null];
     }
   }

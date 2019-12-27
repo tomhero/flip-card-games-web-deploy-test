@@ -3,7 +3,7 @@
     <div class="front-face bra-3">
       <h1>{{label}}</h1>
     </div>
-    <div class="back-face bra-3">{{label}}</div>
+    <div class="back-face bra-3">{{'π'}}</div>
   </div>
 </template>
 
