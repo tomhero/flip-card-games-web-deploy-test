@@ -104,7 +104,7 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-$white: #fdfdfdfd;
+$white: #fdfdfd;
 
 .score-box {
   opacity: 0.64;
