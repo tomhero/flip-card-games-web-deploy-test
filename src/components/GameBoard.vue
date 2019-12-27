@@ -10,13 +10,12 @@
       </div>
       <br />
       <div class="columns is-gapless is-mobile is-multiline">
-        <div class="column is-3-desktop is-6-mobile is-4-tablet" v-for="index in 12" :key="index">
-          <div class="memory-card has-text-centered">
-            <div class="front-face">
-              <h1>{{index}}</h1>
-            </div>
-            <div class="back-face"></div>
-          </div>
+        <div
+          class="column is-3-desktop is-6-mobile is-4-tablet slide-top slide-bottom"
+          v-for="card in cards"
+          :key="card._id"
+        >
+          <card :id="card._id" :value="card.value" :label="card.label" :fliped="card.isFliped"></card>
         </div>
       </div>
     </div>
@@ -24,9 +23,34 @@
 </template>
 
 <script>
+import { uuid, empty } from "uuidv4";
+import Card from "./Card";
+
 export default {
+  components: {
+    Card
+  },
   data() {
-    return {};
+    return {
+      cards: [{ _id: empty(), value: 0, label: "0" }],
+      // Card State
+      hasFlippedCard: false,
+      firstCard: undefined,
+      secondCard: undefined,
+      // Board State
+      lockBoard: false
+    };
+  },
+  beforeMount() {
+    // Prepare card data
+    for (let index = 0; index < 12; index++) {
+      this.cards[index] = {
+        _id: uuid(),
+        value: index,
+        label: String(index + 1),
+        isFliped: false
+      };
+    }
   }
 };
 </script>
@@ -39,121 +63,41 @@ export default {
   .container {
     max-width: 1000px;
   }
-}
 
-.memory-card {
-  width: 10rem;
-  height: 13rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 3rem;
-  position: relative;
-  transform: scale(1);
-  transform-style: preserve-3d;
-  transition: transform 0.5s;
-  box-shadow: 4px 8px 25px 0.5px rgba(100, 100, 100, 0.5);
-
-  .back-face {
-    background: repeating-linear-gradient(
-        0deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        45deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        67.5deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        157.5deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        157.5deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        67.5deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      repeating-linear-gradient(
-        45deg,
-        hsla(54, 0%, 88%, 0.05) 0px,
-        hsla(54, 0%, 88%, 0.05) 1px,
-        transparent 1px,
-        transparent 16px
-      ),
-      linear-gradient(90deg, hsl(224, 72%, 31%), hsl(224, 72%, 31%));
-    color: rgba(241, 241, 230, 0.315);
+  .slide-top:hover {
+    animation: slide-top 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   }
 
-  .front-face {
-    background: rgb(89, 236, 193);
-    background: radial-gradient(
-      circle,
-      rgba(89, 236, 193, 1) 0%,
-      rgba(0, 189, 213, 1) 38%,
-      rgba(0, 123, 196, 1) 89%
-    );
-    color: #f1f1e6;
+  /**
+  * ----------------------------------------
+  * animation slide-top
+  * ----------------------------------------
+  */
+  @keyframes slide-top {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-10px);
+    }
   }
-}
 
-.memory-card:active {
-  transform: scale(0.97);
-  transition: transform 0.2s;
-}
+  .slide-bottom {
+    animation: slide-bottom 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
 
-.memory-card.flip {
-  transform: rotateY(180deg);
-}
-
-.front-face,
-.back-face {
-  font-size: 7rem;
-  line-height: 12rem;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  position: absolute;
-  backface-visibility: hidden;
-}
-
-.front-face {
-  transform: rotateY(180deg);
+  /**
+ * ----------------------------------------
+ * animation slide-bottom
+ * ----------------------------------------
+ */
+  @keyframes slide-bottom {
+    0% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
 }
 </style>
