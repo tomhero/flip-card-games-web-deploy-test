@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
     <score-board :current-score="currentTry" :player-best-score="playerBest" :global-best-score="globalBest"></score-board>
-    <game-board @player-has-change-score="setScore" @end-game="endGame"></game-board>
+    <game-board @player-has-change-score="setScore" @end-game="measurePlayerScore"></game-board>
   </div>
 </template>
 
@@ -17,8 +17,8 @@ export default {
   data() {
     return {
       currentTry: 0,
-      playerBest: 99,
-      globalBest: 0 
+      playerBest: undefined,
+      globalBest: undefined
     }
   },
   components: {
@@ -37,8 +37,8 @@ export default {
     setScore (clickAmount) {
       this.currentTry = clickAmount
     },
-    endGame (finalScore) {
-      if (finalScore < this.playerBest) {
+    measurePlayerScore (finalScore) {
+      if (!this.playerBest || this.playerBest === 0 || finalScore < this.playerBest) {
          localStorage.setItem('playerBestScore', finalScore)
          this.playerBest = finalScore
          // TODO : send new score to API

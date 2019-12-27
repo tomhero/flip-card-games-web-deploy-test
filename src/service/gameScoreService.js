@@ -2,7 +2,7 @@
 export function getGlobelHighestScore() {
     return {
         "achievedAt": "Wed, 25 Dec 2019 15:28:31 GMT",
-        "globalHighscore": 100,
+        "globalHighscore": null,
         "id": "5e03801ffd3c2c870e80b108"
     }
 }

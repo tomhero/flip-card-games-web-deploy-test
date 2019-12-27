@@ -4,7 +4,7 @@
       <div class="columns is-mobile is-centered">
         <div class="column is-half">
           <p class="bd-notification is-primary has-text-centered">
-            <button class="button is-primary is-medium" @click="newGame">Game Start</button>
+            <button class="button is-medium" :class="{'is-primary': currentTry === 0, 'is-danger': currentTry > 0}" @click="newGame">New Game</button>
           </p>
         </div>
       </div>
@@ -19,7 +19,7 @@
           @mouseleave="onLeaveCard(cardIndex)"
           @click="flipCard(cardIndex)"
         >
-          <card :id="card._id" :value="card.value" :front-face-label="card.label" :back-face-label="''+card.value" :fliped="card.isFliped"></card>
+          <card :id="card._id" :value="card.value" :front-face-label="card.label" :fliped="card.isFliped"></card>
         </div>
       </transition-group>
     </div>
@@ -65,7 +65,7 @@ export default {
         _id: uuid(),
         value: (index % this.cardAmount) + 1,
         label: "" + ((index % this.cardAmount) + 1),
-        isFliped: true,
+        isFliped: false,
         isHovered: undefined
       };
     }

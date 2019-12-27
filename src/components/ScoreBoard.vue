@@ -28,7 +28,7 @@
                     <br />Try
                   </h3>
                   <div class="score-box bra-1 my-15">
-                    <label class="title">{{ currentScore }}</label>
+                    <label class="title">{{ currentScore | scoreInPanel }}</label>
                   </div>
                 </div>
                 <div class="column has-text-centered">
@@ -37,7 +37,7 @@
                     <br />Best
                   </h3>
                   <div class="score-box bra-1 my-15">
-                    <label class="title">{{ playerBestScore }}</label>
+                    <label class="title">{{ playerBestScore | scoreInPanel}}</label>
                   </div>
                 </div>
                 <div class="column has-text-centered">
@@ -46,7 +46,7 @@
                     <br />Best
                   </h3>
                   <div class="score-box bra-1 my-15">
-                    <label class="title">{{ globalBestScore }}</label>
+                    <label class="title">{{ globalBestScore | scoreInPanel }}</label>
                   </div>
                 </div>
               </div>
@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <!-- Header For tablet -->
+      <!-- Header For Desktop -->
     </div>
     <div class="container is-hidden-touch" style="padding-top: 1rem; padding-bottom: 0rem;">
       <div class="columns">
@@ -75,7 +75,7 @@
         </div>
         <div class="column has-text-centered" style="padding-top: 0rem;">
           <div class="small-score-box">
-            <label class="title">{{ currentScore }}</label>
+            <label class="title">{{ currentScore | scoreInPanel }}</label>
           </div>
         </div>
         <div class="column has-text-right">
@@ -83,7 +83,7 @@
         </div>
         <div class="column has-text-centered" style="padding-top: 0rem;">
           <div class="small-score-box">
-            <label class="title">{{ playerBestScore }}</label>
+            <label class="title">{{ playerBestScore | scoreInPanel }}</label>
           </div>
         </div>
         <div class="column has-text-right">
@@ -91,7 +91,7 @@
         </div>
         <div class="column has-text-centered" style="padding-top: 0rem;">
           <div class="small-score-box">
-            <label class="title">{{ globalBestScore }}</label>
+            <label class="title">{{ globalBestScore | scoreInPanel }}</label>
           </div>
         </div>
       </div>
@@ -103,17 +103,19 @@
 export default {
   props: {
       currentScore: {
-        type: Number,
-        default: 0
+        type: Number
       },
       playerBestScore: {
-        type: Number,
-        default: 0
+        type: Number
       },
       globalBestScore: {
-        type: Number,
-        default: 0
+        type: Number
       }
+  },
+  filters: {
+    scoreInPanel (value) {
+      return value ? value : '-'
+    }
   }
 };
 </script>
