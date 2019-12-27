@@ -21,6 +21,7 @@
           class="column is-3-desktop is-6-mobile is-4-tablet"
           @mouseenter="onHoverCard(cardIndex)"
           @mouseleave="onLeaveCard(cardIndex)"
+          @click="flipCard(cardIndex)"
         >
           <card :id="card._id" :value="card.value" :label="card.label" :fliped="card.isFliped"></card>
         </div>
@@ -45,9 +46,10 @@ export default {
         {
           _id: empty(),
           value: 0,
-          label: "0",
+          label: '0',
           isFliped: false,
-          isHovered: false
+          isHovered: false,
+          isMatched: false
         }
       ],
       // Card State
@@ -56,7 +58,8 @@ export default {
       secondCard: undefined,
       // Board State
       lockBoard: false,
-      shuffling: false
+      shuffling: false,
+      currentTry: 0
     };
   },
   beforeMount() {
@@ -67,10 +70,16 @@ export default {
         value: index,
         label: String(index + 1),
         isFliped: false,
-        isHovered: undefined
+        isHovered: undefined,
+        isMatched: false
       };
     }
     this.shuffleCards(this.cards);
+  },
+  computed: {
+    isMatched () {
+      return this.firstCard.value === this.secondCard.value;
+    }
   },
   methods: {
     newGame() {
@@ -99,6 +108,40 @@ export default {
           this.$set(this.cards, index, { ...this.cards[index], isHovered: undefined });
         }, 250)
       }
+    },
+    flipCard(index) {
+      if (this.lockBoard) return;
+      if (this.firstCard) {
+        if (this.cards[index]._id === this.firstCard._id) return;
+      }
+
+      this.$set(this.cards, index, { ...this.cards[index], isFliped: true });
+
+      if (!this.hasFlippedCard) {
+        this.hasFlippedCard = true;
+        this.firstCard = this.cards[index];
+        return;
+      }
+      this.secondCard = this.cards[index];
+      
+      this.isMatched ? this.disableCards() : this.unflipCards();
+    },
+    disableCards() {
+      this.resetFlipState();
+    },
+    unflipCards() {
+      this.lockBoard = true;
+      // Flip card logic
+      setTimeout(() => {
+        this.resetFlipState();
+      }, 1000)
+    },
+    resetFlipState() {
+      [this.hasFlippedCard, this.lockBoard] = [false, false];
+      // reset incorrect fliped card!!
+      // this.$set(this.firstCard, index, { ...this.cards[index], isFliped: true });
+      // this.$set(this.secondCard, index, { ...this.cards[index], isFliped: true });
+      [this.firstCard, this.secondCard] = [null, null];
     }
   }
 };
