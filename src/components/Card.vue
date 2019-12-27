@@ -1,6 +1,6 @@
 <template>
-  <div class="memory-card has-text-centered">
-    <div class="front-face">
+  <div class="memory-card has-text-centered" :class="{'flip': fliped}">
+    <div class="front-face bra-3">
       <h1>{{label}}</h1>
     </div>
     <div class="back-face bra-3">{{label}}</div>
@@ -39,7 +39,7 @@ export default {
 <style lang="scss">
 .memory-card {
   width: 10rem;
-  height: 13rem;
+  height: 14rem;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 3rem;
@@ -126,7 +126,7 @@ export default {
   .front-face {
     background: rgb(89, 236, 193);
     background: radial-gradient(
-      circle,
+      circle at top,
       rgba(89, 236, 193, 1) 0%,
       rgba(0, 189, 213, 1) 38%,
       rgba(0, 123, 196, 1) 89%
@@ -147,7 +147,7 @@ export default {
 .front-face,
 .back-face {
   font-size: 7rem;
-  line-height: 12rem;
+  line-height: 12.5rem;
   width: 100%;
   height: 100%;
   padding: 20px;
