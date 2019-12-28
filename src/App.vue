@@ -25,13 +25,14 @@ export default {
     ScoreBoard,
     GameBoard
   },
-  beforeMount () {
+  async beforeMount () {
     // TODO : async await 🆗 local Storage
     const storedBestScore = localStorage.getItem('playerBestScore')
     if (!isNaN(storedBestScore)) {
       this.playerBest = +storedBestScore
     }
-    this.globalBest = getGlobelHighestScore().globalHighscore
+    const responseJson = await getGlobelHighestScore()
+    this.globalBest = responseJson.globalHighscore
   },
   methods: {
     setScore (clickAmount) {

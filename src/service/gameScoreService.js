@@ -1,20 +1,20 @@
 /* eslint-disable no-console */
+const host = process.env.API_HOST || '35.227.148.145'
+const port = process.env.API_PORT || '9000'
+// const apiKey = process.env.API_KEY || ''
+const apiVersion = process.env.API_VERSION || 'v1'
+const apiUrl = `http://${host}:${port}/api/${apiVersion}/highscore`
+
 export function getGlobelHighestScore() {
-    return {
-        "achievedAt": "Wed, 25 Dec 2019 15:28:31 GMT",
-        "globalHighscore": null,
-        "id": "5e03801ffd3c2c870e80b108"
-    }
+  return fetch(apiUrl, { mode: 'cors' }).then(response => response.json())
 }
 
 export function sendPlayerHighScore(score) {
-    console.log(score)
-    return {
-        "globalAchievedAt": "Wed, 25 Dec 2019 15:28:31 GMT",
-        "globalHighscore": 20,
-        "isBreakTheRecord": true,
-        "message": "New highscore from player saved successfully!",
-        "playerAchievedAt": "Wed, 25 Dec 2019 15:28:31 GMT",
-        "status": true
-    }
+  return fetch(apiUrl, {
+    method: 'POST',
+    mode: 'cors', // no-cors, *cors, same-origin
+    body: JSON.stringify({
+      playerHighscore: score
+    })
+  }).then(response => response.json())
 }
