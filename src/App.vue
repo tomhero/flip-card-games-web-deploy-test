@@ -30,7 +30,7 @@ export default {
     this.globalBest = responseJson.globalHighscore
     
     const storedBestScore = localStorage.getItem('playerBestScore')
-    if (!isNaN(storedBestScore)) {
+    if (!isNaN(storedBestScore) && storedBestScore >= responseJson.globalHighscore) {
       this.playerBest = +storedBestScore
     }
   },
