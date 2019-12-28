@@ -1,5 +1,9 @@
 # flip-card-games-web
 
+## Deployment
+
+[![Deploy With Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/tomhero/flip-card-games-web)
+
 ## Project setup
 ```
 npm install
