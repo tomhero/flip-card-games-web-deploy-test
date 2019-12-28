@@ -19,7 +19,7 @@
           @mouseleave="onLeaveCard(cardIndex)"
           @click="flipCard(cardIndex)"
         >
-          <card :id="card._id" :value="card.value" :front-face-label="card.label" :fliped="card.isFliped"></card>
+          <card :id="card._id" :value="card.value" :front-face-label="card.label" :back-face-label="''+card.value" :fliped="card.isFliped"></card>
         </div>
       </transition-group>
     </div>

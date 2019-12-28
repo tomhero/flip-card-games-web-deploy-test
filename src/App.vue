@@ -10,7 +10,7 @@
 import ScoreBoard from './components/ScoreBoard'
 import GameBoard from './components/GameBoard'
 
-import { getGlobelHighestScore } from './service/gameScoreService'
+import { getGlobelHighestScore, sendPlayerHighScore } from './service/gameScoreService'
 
 export default {
   name: 'app',
@@ -26,24 +26,26 @@ export default {
     GameBoard
   },
   async beforeMount () {
-    // TODO : async await 🆗 local Storage
+    const responseJson = await getGlobelHighestScore()
+    this.globalBest = responseJson.globalHighscore
+    
     const storedBestScore = localStorage.getItem('playerBestScore')
     if (!isNaN(storedBestScore)) {
       this.playerBest = +storedBestScore
     }
-    const responseJson = await getGlobelHighestScore()
-    this.globalBest = responseJson.globalHighscore
   },
   methods: {
     setScore (clickAmount) {
       this.currentTry = clickAmount
     },
-    measurePlayerScore (finalScore) {
+    async measurePlayerScore (finalScore) {
       if (!this.playerBest || this.playerBest === 0 || finalScore < this.playerBest) {
          localStorage.setItem('playerBestScore', finalScore)
          this.playerBest = finalScore
-         // TODO : send new score to API
       }
+      // TODO : send new score to API
+      const responseJson = await sendPlayerHighScore(finalScore)
+      this.globalBest = responseJson.globalHighscore
     }
   }
 }
