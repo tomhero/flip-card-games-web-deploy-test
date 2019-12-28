@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
+[template]
+  incoming-hooks = ["flipcard-service"]
+
 [template.environment]
   VUE_APP_API_HOST = "This is host of your backend server"
   VUE_APP_API_KEY = "Please specific backend api key"
